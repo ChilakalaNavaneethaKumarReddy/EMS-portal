@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (toggle .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Poppins", "Noto Sans Telugu", "Noto Sans Devanagari", sans-serif;
+  --font-sans: "Inter", "Noto Sans Telugu", "Noto Sans Devanagari", sans-serif;
+
+  /* Brand palette */
+  --color-army-50: #f3f5ee;
+  --color-army-100: #e3e8d6;
+  --color-army-200: #c8d2ae;
+  --color-army-300: #a9b886;
+  --color-army-400: #87a062;
+  --color-army-500: #6b8548;
+  --color-army-600: #556B2F;   /* Olive Green */
+  --color-army-700: #4B5320;   /* Army Green */
+  --color-army-800: #3a4019;
+  --color-army-900: #2c3114;
+
+  --color-saffron-50:  #fff7ed;
+  --color-saffron-300: #ffc06e;
+  --color-saffron-500: #FF9933; /* Saffron accent */
+  --color-saffron-600: #e8801a;
+  --color-saffron-700: #c4660f;
+
+  --radius-card: 0.875rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-army-50 text-army-900 dark:bg-[#161a12] dark:text-army-50;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  ::selection {
+    @apply bg-saffron-300/60;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-saffron-500);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/60 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10;
+  }
+  .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-army-300 dark:bg-army-700 rounded-full; }
+}
