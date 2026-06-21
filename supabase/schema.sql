@@ -22,13 +22,14 @@ create table admin_users (
 
 alter table admin_users enable row level security;
 
-create policy "Admins can view admin_users list"
+create policy "Anyone can view admin_users"
   on admin_users for select
-  using (exists (select 1 from admin_users where admin_users.id = auth.uid()));
+  using (true);
 
-create policy "Admins can update admin_users"
+create policy "Admins can manage admin_users"
   on admin_users for all
-  using (exists (select 1 from admin_users where admin_users.id = auth.uid()));
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
 
 -- Automatically add signed up users to admin_users table (acting as the admin)
 create or replace function public.handle_new_admin()
