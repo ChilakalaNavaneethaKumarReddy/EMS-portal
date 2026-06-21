@@ -3,11 +3,13 @@ import { HeartPulse, ExternalLink, ShieldCheck, CreditCard, Hospital } from "luc
 import { getLatestUpdates } from "@/services/updatesService"
 import { UpdateCard } from "@/components/shared/UpdateCard"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Update } from "@/types"
 
 export function Echs() {
   const [updates, setUpdates] = useState<Update[]>([])
   const [loading, setLoading] = useState(true)
+  const { t } = useLanguage()
 
   useEffect(() => {
     getLatestUpdates(100).then((all) => {
@@ -29,13 +31,13 @@ export function Echs() {
         <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white/5" />
         <div className="relative z-10 space-y-3 max-w-2xl">
           <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur-sm">
-            <HeartPulse className="h-3.5 w-3.5 text-emerald-400 animate-pulse" /> Healthcare
+            <HeartPulse className="h-3.5 w-3.5 text-emerald-400 animate-pulse" /> {t("echs")}
           </span>
           <h1 className="font-display text-3xl font-bold sm:text-4xl">
-            Ex-Servicemen Contributory Health Scheme (ECHS)
+            {t("echsTitle")}
           </h1>
           <p className="text-sm text-emerald-100 sm:text-base">
-            Comprehensive, cashless medical treatment for ESM pensioners and their dependents through polyclinics and empanelled private hospitals.
+            {t("echsSubtitle")}
           </p>
         </div>
       </section>
@@ -48,19 +50,19 @@ export function Echs() {
               <CreditCard className="h-6 w-6" />
             </span>
             <div>
-              <CardTitle className="text-base font-bold">64KB Smart Card</CardTitle>
+              <CardTitle className="text-base font-bold">{t("echsCardTitle")}</CardTitle>
               <CardDescription>Online application & renewal</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="text-sm text-army-600 dark:text-army-300 space-y-3 pt-2">
-            <p>Apply online for the new 64KB Smart Card. Track status, check temporary slip validation, and configure parent polyclinics.</p>
+            <p>{t("echsCardDesc")}</p>
             <a
               href="https://echs.gov.in/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:underline"
             >
-              Go to ECHS Portal <ExternalLink className="h-3 w-3" />
+              {t("echsPortalBtn")} <ExternalLink className="h-3 w-3" />
             </a>
           </CardContent>
         </Card>
@@ -119,7 +121,7 @@ export function Echs() {
           Latest ECHS Circulars & Advisories
         </h2>
         {loading ? (
-          <p className="text-sm text-army-400">Loading medical updates...</p>
+          <p className="text-sm text-army-400">{t("loading")}</p>
         ) : updates.length === 0 ? (
           <p className="text-sm text-army-500 dark:text-army-400 rounded-lg border border-dashed border-army-200 p-6 text-center dark:border-white/10">
             No recent ECHS circulars found in the database. Scrapers will sync official posts daily.

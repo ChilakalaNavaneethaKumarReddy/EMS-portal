@@ -7,17 +7,19 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { SaveButton } from "@/components/shared/SaveButton"
 import { ShareButton } from "@/components/shared/ShareButton"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Scheme } from "@/types"
 
 export function SchemeDetail() {
   const { id } = useParams<{ id: string }>()
   const [scheme, setScheme] = useState<Scheme | null | undefined>(undefined)
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (id) getSchemeById(id).then(setScheme)
   }, [id])
 
-  if (scheme === undefined) return <div className="mx-auto max-w-3xl px-4 py-10 text-sm text-army-400 sm:px-6">Loading…</div>
+  if (scheme === undefined) return <div className="mx-auto max-w-3xl px-4 py-10 text-sm text-army-400 sm:px-6">{t("loading")}</div>
   if (scheme === null) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
@@ -35,7 +37,7 @@ export function SchemeDetail() {
 
       <Card className="mt-4">
         <CardContent className="pt-6">
-          <Badge variant="scheme" className="w-fit"><Tag className="h-3 w-3" /> {scheme.category}</Badge>
+          <Badge variant="scheme" className="w-fit"><Tag className="h-3 w-3" /> {t(scheme.category || "schemes")}</Badge>
           <h1 className="mt-3 font-display text-2xl font-bold">{scheme.title}</h1>
           <p className="mt-2 text-sm text-army-600 dark:text-army-300">{scheme.summary}</p>
 

@@ -9,6 +9,7 @@ import { ShareButton } from "@/components/shared/ShareButton"
 import { EmptyState } from "@/components/shared/EmptyState"
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Update } from "@/types"
 
 export function Notifications() {
@@ -18,6 +19,7 @@ export function Notifications() {
   const [source, setSource] = useState("All")
   const [, forceRerender] = useState(0)
   const [loading, setLoading] = useState(true)
+  const { t } = useLanguage()
 
   useEffect(() => {
     getLatestUpdates(100).then((u) => {
@@ -43,11 +45,11 @@ export function Notifications() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <h1 className="font-display text-2xl font-bold sm:text-3xl">Notifications</h1>
+      <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("statsUpdates")}</h1>
       <p className="mt-1 text-army-500 dark:text-army-300">All official announcements, in one feed.</p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-        <SearchBar value={query} onChange={setQuery} placeholder="Search notifications…" />
+        <SearchBar value={query} onChange={setQuery} placeholder={t("searchPlaceholder")} />
         <select value={category} onChange={(e) => setCategory(e.target.value)} className="h-10 rounded-lg border border-army-300 bg-white px-3 text-sm dark:border-white/15 dark:bg-white/[0.04] dark:text-army-50">
           {categories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
@@ -58,9 +60,9 @@ export function Notifications() {
 
       <div className="mt-6 space-y-3">
         {loading ? (
-          <p className="text-sm text-army-400">Loading notifications…</p>
+          <p className="text-sm text-army-400">{t("loading")}</p>
         ) : filtered.length === 0 ? (
-          <EmptyState icon={<Bell className="h-8 w-8" />} title="No notifications match" message="Try a different filter or search term." />
+          <EmptyState icon={<Bell className="h-8 w-8" />} title={t("noResults")} message="Try a different filter or search term." />
         ) : (
           filtered.map((u) => {
             const read = isRead(u.id)

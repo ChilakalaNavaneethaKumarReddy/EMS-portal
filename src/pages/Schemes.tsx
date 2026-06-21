@@ -4,6 +4,7 @@ import { getLatestSchemes } from "@/services/schemesService"
 import { SchemeCard } from "@/components/shared/SchemeCard"
 import { SearchBar } from "@/components/shared/SearchBar"
 import { EmptyState } from "@/components/shared/EmptyState"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Scheme } from "@/types"
 
 export function Schemes() {
@@ -11,6 +12,7 @@ export function Schemes() {
   const [query, setQuery] = useState("")
   const [category, setCategory] = useState("All")
   const [loading, setLoading] = useState(true)
+  const { t } = useLanguage()
 
   useEffect(() => {
     getLatestSchemes(100).then((s) => {
@@ -35,13 +37,13 @@ export function Schemes() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <h1 className="font-display text-2xl font-bold sm:text-3xl">Welfare schemes</h1>
+      <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("statsSchemes")}</h1>
       <p className="mt-1 text-army-500 dark:text-army-300">
         Central and Telangana / Andhra Pradesh state schemes for ex-servicemen and their families.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto]">
-        <SearchBar value={query} onChange={setQuery} placeholder="Search by name, benefit, eligibility…" />
+        <SearchBar value={query} onChange={setQuery} placeholder={t("searchPlaceholder")} />
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -55,11 +57,11 @@ export function Schemes() {
 
       <div className="mt-6">
         {loading ? (
-          <p className="text-sm text-army-400">Loading schemes…</p>
+          <p className="text-sm text-army-400">{t("loading")}</p>
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<FileText className="h-8 w-8" />}
-            title="No schemes match your filters"
+            title={t("noResults")}
             message="Try a different search term or category."
           />
         ) : (

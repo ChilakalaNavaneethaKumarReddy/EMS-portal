@@ -1,22 +1,25 @@
 import { Shield, Server, Terminal, Database, Globe } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 export function About() {
+  const { t } = useLanguage()
+
   return (
     <div className="mx-auto max-w-4xl space-y-12 px-4 py-10 sm:px-6">
       <section className="text-center space-y-4">
         <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-army-700 text-white shadow-md">
           <Shield className="h-7 w-7 text-saffron-400" />
         </span>
-        <h1 className="font-display text-3xl font-extrabold sm:text-4xl">Veer Connect 🇮🇳</h1>
+        <h1 className="font-display text-3xl font-extrabold sm:text-4xl">{t("heroTitle")} 🇮🇳</h1>
         <p className="mx-auto max-w-xl text-army-600 dark:text-army-300">
-          A fully automated public information portal consolidating news, circulars, jobs, and welfare schemes from official defense welfare websites for Indian Ex-Servicemen and their dependents.
+          {t("aboutSubtitle")}
         </p>
       </section>
 
       {/* Architecture Section */}
       <section className="space-y-6">
-        <h2 className="text-center font-display text-2xl font-bold">Data Architecture & Pipeline</h2>
+        <h2 className="text-center font-display text-2xl font-bold">{t("aboutSourceTitle")}</h2>
         
         {/* Pipeline Diagram */}
         <div className="grid gap-4 md:grid-cols-4 relative">
@@ -64,7 +67,7 @@ export function About() {
 
       {/* Key Design Goals */}
       <section className="bg-white py-8 rounded-2xl px-6 dark:bg-white/[0.02] border border-army-100 dark:border-white/10">
-        <h2 className="font-display text-xl font-bold mb-4">Core Principles</h2>
+        <h2 className="font-display text-xl font-bold mb-4">{t("aboutMissionTitle")}</h2>
         <div className="space-y-4 text-sm text-army-600 dark:text-army-300">
           <div>
             <p className="font-bold text-army-800 dark:text-army-100">🚫 No Mandatory Login</p>

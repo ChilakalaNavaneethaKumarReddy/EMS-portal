@@ -6,17 +6,19 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { SaveButton } from "@/components/shared/SaveButton"
 import { ShareButton } from "@/components/shared/ShareButton"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Job } from "@/types"
 
 export function JobDetail() {
   const { id } = useParams<{ id: string }>()
   const [job, setJob] = useState<Job | null | undefined>(undefined)
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (id) getJobById(id).then(setJob)
   }, [id])
 
-  if (job === undefined) return <div className="mx-auto max-w-3xl px-4 py-10 text-sm text-army-400 sm:px-6">Loading…</div>
+  if (job === undefined) return <div className="mx-auto max-w-3xl px-4 py-10 text-sm text-army-400 sm:px-6">{t("loading")}</div>
   if (job === null) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">

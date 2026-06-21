@@ -1,5 +1,6 @@
 import { Phone, Mail, Clock, HelpCircle, MapPin } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 const HELPLINES = [
   {
@@ -52,12 +53,14 @@ const HELPLINES = [
 ]
 
 export function Helplines() {
+  const { t } = useLanguage()
+
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
       <div>
-        <h1 className="font-display text-2xl font-bold sm:text-3xl">Official Helplines</h1>
+        <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("helplinesTitle")}</h1>
         <p className="mt-1 text-army-500 dark:text-army-300">
-          Emergency contacts, support desks, and grievance redressal nodes for ex-servicemen and dependents.
+          {t("helplinesSubtitle")}
         </p>
       </div>
 

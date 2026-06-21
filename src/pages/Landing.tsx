@@ -2,15 +2,16 @@ import { useEffect, useState, useMemo } from "react"
 import { Link } from "react-router-dom"
 import { 
   Shield, Briefcase, FileText, HeartPulse, Landmark, 
-  Search, RefreshCw, Bell, ArrowRight, Phone, Info, AlertTriangle, Sparkles 
+  Search, Bell, ArrowRight, Phone, Info, AlertTriangle, Sparkles 
 } from "lucide-react"
 import { getLatestUpdates } from "@/services/updatesService"
 import { getLatestJobs } from "@/services/jobsService"
 import { getLatestSchemes } from "@/services/schemesService"
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Update, Job, Scheme } from "@/types"
 
 export function Landing() {
@@ -18,6 +19,7 @@ export function Landing() {
   const [jobs, setJobs] = useState<Job[]>([])
   const [schemes, setSchemes] = useState<Scheme[]>([])
   const [loading, setLoading] = useState(true)
+  const { t } = useLanguage()
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState("")
@@ -111,10 +113,10 @@ export function Landing() {
             <Shield className="h-9 w-9 text-saffron-400" />
           </div>
           <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl text-white">
-            Veer Connect <span className="text-saffron-400">🇮🇳</span>
+            {t("heroTitle")} <span className="text-saffron-400">🇮🇳</span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-army-100 sm:text-xl font-light">
-            A unified information portal for Indian Ex-Servicemen, veterans, senior citizens, and their families.
+            {t("heroTagline")}
           </p>
 
           {/* Real-time Indicator Bar */}
@@ -132,7 +134,7 @@ export function Landing() {
         <div className="mx-auto max-w-4xl px-4">
           <div className="flex items-center gap-3 rounded-xl bg-saffron-50 border border-saffron-200 px-4 py-3 text-sm text-saffron-800 dark:bg-saffron-950/20 dark:border-saffron-900/30 dark:text-saffron-300 shadow-md animate-bounce">
             <Sparkles className="h-5 w-5 text-saffron-600 shrink-0" />
-            <p className="font-medium">New updates synced from government portal! Feed updated automatically.</p>
+            <p className="font-medium">{t("syncAlert")}</p>
           </div>
         </div>
       )}
@@ -144,7 +146,7 @@ export function Landing() {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-army-400" />
             <Input
               type="text"
-              placeholder="Search notifications, vacancies, or welfare schemes..."
+              placeholder={t("searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -152,10 +154,10 @@ export function Landing() {
           </div>
           <div className="flex flex-wrap gap-2">
             {[
-              { id: "all", label: "All Items" },
-              { id: "updates", label: "Notifications" },
-              { id: "jobs", label: "Job Opportunities" },
-              { id: "schemes", label: "Govt Schemes" },
+              { id: "all", key: "filterAll" },
+              { id: "updates", key: "filterUpdates" },
+              { id: "jobs", key: "filterJobs" },
+              { id: "schemes", key: "filterSchemes" },
             ].map((tab) => (
               <Button
                 key={tab.id}
@@ -163,7 +165,7 @@ export function Landing() {
                 size="sm"
                 onClick={() => { setActiveCategory(tab.id); setVisibleCount(6); }}
               >
-                {tab.label}
+                {t(tab.key)}
               </Button>
             ))}
           </div>
@@ -175,9 +177,9 @@ export function Landing() {
         <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-950/40 dark:bg-red-950/10 flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-display font-bold text-red-800 dark:text-red-400 text-sm">Important Alerts for Pensioners</h4>
+            <h4 className="font-display font-bold text-red-800 dark:text-red-400 text-sm">{t("pensionCardTitle")}</h4>
             <p className="mt-1 text-xs text-red-700 dark:text-red-300/80">
-              Migration to SPARSH is mandatory for all defence pensioners. Please verify your identification status and submit your Annual Life Certificate online via Jeevan Pramaan before the end of the month to prevent pension stoppage.
+              {t("pensionMockPending")}
             </p>
           </div>
         </div>
@@ -185,8 +187,14 @@ export function Landing() {
 
       {/* Content Feed */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Helper Info Banner explaining English content constraint */}
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-army-50 dark:bg-white/5 p-3 text-xs text-army-500 dark:text-army-400">
+          <Info className="h-4 w-4 text-saffron-500 shrink-0" />
+          <span>{t("officialDisclaimer")}</span>
+        </div>
+
         {loading ? (
-          <p className="text-center text-sm text-army-400">Loading live data feed...</p>
+          <p className="text-center text-sm text-army-400">{t("loading")}</p>
         ) : (
           <div className="space-y-12">
             
@@ -195,16 +203,16 @@ export function Landing() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="font-display text-xl font-bold flex items-center gap-2">
-                    <Bell className="h-5 w-5 text-army-600 dark:text-army-300" /> Latest Notifications
+                    <Bell className="h-5 w-5 text-army-600 dark:text-army-300" /> {t("statsUpdates")}
                   </h2>
                   {activeCategory === "all" && (
                     <Button variant="link" size="sm" asChild>
-                      <Link to="/updates">View all updates <ArrowRight className="h-3.5 w-3.5" /></Link>
+                      <Link to="/updates">{t("viewAll")} <ArrowRight className="h-3.5 w-3.5" /></Link>
                     </Button>
                   )}
                 </div>
                 {filteredUpdates.length === 0 ? (
-                  <p className="text-sm text-army-400">No notifications match your query.</p>
+                  <p className="text-sm text-army-400">{t("noResults")}</p>
                 ) : (
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredUpdates.slice(0, activeCategory === "all" ? 3 : visibleCount).map((u) => (
@@ -212,7 +220,7 @@ export function Landing() {
                         <CardHeader className="pb-2">
                           <div className="flex justify-between items-center gap-2 mb-2">
                             <span className="inline-flex rounded-full bg-army-100 dark:bg-white/10 px-2 py-0.5 text-xs capitalize text-army-800 dark:text-army-300">
-                              {u.category}
+                              {t(u.category || "updates")}
                             </span>
                             <span className="text-xs text-army-500">
                               {u.published_date ? new Date(u.published_date).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "Recent"}
@@ -221,12 +229,12 @@ export function Landing() {
                           <CardTitle className="text-base font-bold line-clamp-2">{u.title}</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 text-sm text-army-600 dark:text-army-300">
-                          <p className="line-clamp-3">{u.summary || "No summary provided. Open details link for full circular information."}</p>
+                          <p className="line-clamp-3">{u.summary || "No summary provided."}</p>
                         </CardContent>
                         <CardFooter className="border-t border-army-100 pt-3 flex justify-between items-center dark:border-white/10 text-xs text-army-500">
                           <span>Source: {u.source || "Official Portal"}</span>
                           <Button variant="outline" size="sm" asChild>
-                            <a href={u.link} target="_blank" rel="noopener noreferrer">Read More</a>
+                            <a href={u.link} target="_blank" rel="noopener noreferrer">{t("readMore")}</a>
                           </Button>
                         </CardFooter>
                       </Card>
@@ -241,16 +249,16 @@ export function Landing() {
               <div className="space-y-4 pt-4">
                 <div className="flex items-center justify-between">
                   <h2 className="font-display text-xl font-bold flex items-center gap-2">
-                    <Briefcase className="h-5 w-5 text-army-600 dark:text-army-300" /> Latest Job Opportunities
+                    <Briefcase className="h-5 w-5 text-army-600 dark:text-army-300" /> {t("statsJobs")}
                   </h2>
                   {activeCategory === "all" && (
                     <Button variant="link" size="sm" asChild>
-                      <Link to="/jobs">View all jobs <ArrowRight className="h-3.5 w-3.5" /></Link>
+                      <Link to="/jobs">{t("viewAll")} <ArrowRight className="h-3.5 w-3.5" /></Link>
                     </Button>
                   )}
                 </div>
                 {filteredJobs.length === 0 ? (
-                  <p className="text-sm text-army-400">No job openings found matching search term.</p>
+                  <p className="text-sm text-army-400">{t("noResults")}</p>
                 ) : (
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredJobs.slice(0, activeCategory === "all" ? 3 : visibleCount).map((j) => (
@@ -271,7 +279,7 @@ export function Landing() {
                         <CardFooter className="border-t border-army-100 pt-3 flex justify-between items-center dark:border-white/10 text-xs">
                           <span className="text-army-500">Eligible: {j.eligibility || "Ex-Servicemen"}</span>
                           <Button variant="outline" size="sm" asChild>
-                            <a href={j.link} target="_blank" rel="noopener noreferrer">Read More</a>
+                            <a href={j.link} target="_blank" rel="noopener noreferrer">{t("readMore")}</a>
                           </Button>
                         </CardFooter>
                       </Card>
@@ -286,16 +294,16 @@ export function Landing() {
               <div className="space-y-4 pt-4">
                 <div className="flex items-center justify-between">
                   <h2 className="font-display text-xl font-bold flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-army-600 dark:text-army-300" /> Welfare Schemes & Grants
+                    <FileText className="h-5 w-5 text-army-600 dark:text-army-300" /> {t("statsSchemes")}
                   </h2>
                   {activeCategory === "all" && (
                     <Button variant="link" size="sm" asChild>
-                      <Link to="/schemes">View all schemes <ArrowRight className="h-3.5 w-3.5" /></Link>
+                      <Link to="/schemes">{t("viewAll")} <ArrowRight className="h-3.5 w-3.5" /></Link>
                     </Button>
                   )}
                 </div>
                 {filteredSchemes.length === 0 ? (
-                  <p className="text-sm text-army-400">No welfare schemes match the search criteria.</p>
+                  <p className="text-sm text-army-400">{t("noResults")}</p>
                 ) : (
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {filteredSchemes.slice(0, activeCategory === "all" ? 3 : visibleCount).map((s) => (
@@ -303,12 +311,12 @@ export function Landing() {
                         <CardHeader className="pb-2">
                           <div className="flex justify-between items-center gap-2 mb-2">
                             <span className="text-xs font-semibold text-emerald-600">{s.source || "KSB"}</span>
-                            <span className="text-xs text-army-500">Welfare</span>
+                            <span className="text-xs text-army-500">{t(s.category || "schemes")}</span>
                           </div>
                           <CardTitle className="text-base font-bold line-clamp-2">{s.title}</CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 text-sm text-army-600 dark:text-army-300 space-y-2">
-                          <p className="line-clamp-3">{s.description || "Consolidated details of KSB/DGR welfare scheme."}</p>
+                          <p className="line-clamp-3">{s.description || "Welfare scheme details."}</p>
                           <div className="text-xs text-army-500 space-y-1">
                             <p><strong>Benefits:</strong> {s.benefits ? s.benefits.substring(0, 80) : "Welfare Grant"}...</p>
                             <p><strong>Eligible:</strong> {s.eligibility ? s.eligibility.substring(0, 80) : "Ex-Servicemen"}...</p>
@@ -316,7 +324,7 @@ export function Landing() {
                         </CardContent>
                         <CardFooter className="border-t border-army-100 pt-3 flex justify-end dark:border-white/10">
                           <Button variant="outline" size="sm" asChild>
-                            <a href={s.link} target="_blank" rel="noopener noreferrer">Read More</a>
+                            <a href={s.link} target="_blank" rel="noopener noreferrer">{t("readMore")}</a>
                           </Button>
                         </CardFooter>
                       </Card>
@@ -330,13 +338,13 @@ export function Landing() {
             {activeCategory !== "all" && (
               <div className="flex justify-center pt-4">
                 {activeCategory === "updates" && filteredUpdates.length > visibleCount && (
-                  <Button onClick={() => setVisibleCount(v => v + 6)}>Load More Items</Button>
+                  <Button onClick={() => setVisibleCount(v => v + 6)}>{t("loadMore")}</Button>
                 )}
                 {activeCategory === "jobs" && filteredJobs.length > visibleCount && (
-                  <Button onClick={() => setVisibleCount(v => v + 6)}>Load More Jobs</Button>
+                  <Button onClick={() => setVisibleCount(v => v + 6)}>{t("loadMore")}</Button>
                 )}
                 {activeCategory === "schemes" && filteredSchemes.length > visibleCount && (
-                  <Button onClick={() => setVisibleCount(v => v + 6)}>Load More Schemes</Button>
+                  <Button onClick={() => setVisibleCount(v => v + 6)}>{t("loadMore")}</Button>
                 )}
               </div>
             )}
@@ -348,15 +356,15 @@ export function Landing() {
       <section className="mx-auto max-w-6xl px-4 sm:px-6">
         <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-saffron-500" />
-          Quick Access Portals
+          {t("recommendedForYou")}
         </h2>
         <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
           {[
-            { label: "ECHS Health", desc: "Polyclinics & Hospital Lists", to: "/echs", icon: HeartPulse, color: "text-emerald-500" },
-            { label: "Pension Sparsh", desc: "Life Certificate & OROP Status", to: "/pension", icon: Landmark, color: "text-saffron-500" },
-            { label: "Job Postings", desc: "DGR & NCS Resettlement Jobs", to: "/jobs", icon: Briefcase, color: "text-blue-500" },
-            { label: "Helpline Desk", desc: "Welfare Support Contacts", to: "/helplines", icon: Phone, color: "text-purple-500" },
-            { label: "About Connect", desc: "Automated Data pipeline details", to: "/about", icon: Info, color: "text-teal-500" },
+            { label: t("echs"), desc: "Polyclinics & Hospital Lists", to: "/echs", icon: HeartPulse, color: "text-emerald-500" },
+            { label: t("pension"), desc: "Life Certificate & OROP Status", to: "/pension", icon: Landmark, color: "text-saffron-500" },
+            { label: t("jobs"), desc: "DGR & NCS Resettlement Jobs", to: "/jobs", icon: Briefcase, color: "text-blue-500" },
+            { label: t("helplines"), desc: "Welfare Support Contacts", to: "/helplines", icon: Phone, color: "text-purple-500" },
+            { label: t("about"), desc: "Automated Data pipeline details", to: "/about", icon: Info, color: "text-teal-500" },
           ].map((item) => (
             <Link key={item.label} to={item.to} className="group">
               <Card className="h-full group-hover:border-saffron-500/50 transition-colors">

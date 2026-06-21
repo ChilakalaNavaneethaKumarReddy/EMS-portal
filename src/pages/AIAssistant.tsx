@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { JobCard } from "@/components/shared/JobCard"
 import { SchemeCard } from "@/components/shared/SchemeCard"
 import { UpdateCard } from "@/components/shared/UpdateCard"
+import { useLanguage } from "@/contexts/LanguageContext"
 
 interface Message {
   role: "user" | "assistant"
@@ -15,15 +16,21 @@ interface Message {
 }
 
 export function AIAssistant() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      text: "Namaste! I'm Veer Assistant. Ask me about jobs, schemes, pension or ECHS — for example, \"any jobs in Telangana?\"",
-    },
-  ])
+  const { t } = useLanguage()
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [thinking, setThinking] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  // Initialize welcome message dynamically on language load/change
+  useEffect(() => {
+    setMessages([
+      {
+        role: "assistant",
+        text: t("aiDefaultResponse"),
+      },
+    ])
+  }, [t])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -46,8 +53,8 @@ export function AIAssistant() {
           <Bot className="h-5 w-5" />
         </span>
         <div>
-          <h1 className="font-display text-xl font-bold">Veer Assistant</h1>
-          <p className="text-xs text-army-500 dark:text-army-400">Searches jobs, schemes & notifications instantly</p>
+          <h1 className="font-display text-xl font-bold">{t("aiTitle")}</h1>
+          <p className="text-xs text-army-500 dark:text-army-400">{t("aiSubtitle")}</p>
         </div>
       </div>
 
@@ -122,7 +129,7 @@ export function AIAssistant() {
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about jobs, schemes, pension, ECHS…"
+          placeholder={t("aiInputPlaceholder")}
         />
         <Button type="submit" size="icon" disabled={thinking}>
           <Send className="h-4 w-4" />

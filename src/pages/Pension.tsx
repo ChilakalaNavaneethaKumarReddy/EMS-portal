@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
-import { Landmark, ExternalLink, Key, CheckCircle, Clock, AlertTriangle } from "lucide-react"
+import { Landmark, ExternalLink, Key, CheckCircle, Clock } from "lucide-react"
 import { getLatestUpdates } from "@/services/updatesService"
 import { UpdateCard } from "@/components/shared/UpdateCard"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Update } from "@/types"
 
 export function Pension() {
   const [updates, setUpdates] = useState<Update[]>([])
   const [loading, setLoading] = useState(true)
+  const { t } = useLanguage()
 
   useEffect(() => {
     getLatestUpdates(100).then((all) => {
@@ -31,13 +33,13 @@ export function Pension() {
         <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white/5" />
         <div className="relative z-10 space-y-3 max-w-2xl">
           <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider backdrop-blur-sm">
-            <Landmark className="h-3.5 w-3.5 text-saffron-300" /> Pension & Benefits
+            <Landmark className="h-3.5 w-3.5 text-saffron-300" /> {t("pension")}
           </span>
           <h1 className="font-display text-3xl font-bold sm:text-4xl">
-            SPARSH Defence Pension Portal
+            {t("pensionTitle")}
           </h1>
           <p className="text-sm text-saffron-100 sm:text-base">
-            System for Pension Administration (Raksha) - a unified portal for defence pensioners to manage credentials, calculate OROP revisions, and submit annual life certificates.
+            {t("pensionSubtitle")}
           </p>
         </div>
       </section>
@@ -121,7 +123,7 @@ export function Pension() {
           Pension Circulars, Dearness Relief & OROP Updates
         </h2>
         {loading ? (
-          <p className="text-sm text-army-400">Loading pension updates...</p>
+          <p className="text-sm text-army-400">{t("loading")}</p>
         ) : updates.length === 0 ? (
           <p className="text-sm text-army-500 dark:text-army-400 rounded-lg border border-dashed border-army-200 p-6 text-center dark:border-white/10">
             No pension-related updates found in the database.

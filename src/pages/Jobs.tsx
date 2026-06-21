@@ -4,6 +4,7 @@ import { getLatestJobs } from "@/services/jobsService"
 import { JobCard } from "@/components/shared/JobCard"
 import { SearchBar } from "@/components/shared/SearchBar"
 import { EmptyState } from "@/components/shared/EmptyState"
+import { useLanguage } from "@/contexts/LanguageContext"
 import type { Job } from "@/types"
 
 export function Jobs() {
@@ -12,6 +13,7 @@ export function Jobs() {
   const [state, setState] = useState("All States")
   const [sort, setSort] = useState<"latest" | "deadline">("latest")
   const [loading, setLoading] = useState(true)
+  const { t } = useLanguage()
 
   useEffect(() => {
     getLatestJobs(100).then((j) => {
@@ -42,13 +44,13 @@ export function Jobs() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <h1 className="font-display text-2xl font-bold sm:text-3xl">Jobs for ex-servicemen</h1>
+      <h1 className="font-display text-2xl font-bold sm:text-3xl">{t("statsJobs")}</h1>
       <p className="mt-1 text-army-500 dark:text-army-300">
         Openings sourced from DGR, NCS and official job fairs.
       </p>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-        <SearchBar value={query} onChange={setQuery} placeholder="Search by title, organization, eligibility…" />
+        <SearchBar value={query} onChange={setQuery} placeholder={t("searchPlaceholder")} />
         <select
           value={state}
           onChange={(e) => setState(e.target.value)}
@@ -70,11 +72,11 @@ export function Jobs() {
 
       <div className="mt-6">
         {loading ? (
-          <p className="text-sm text-army-400">Loading jobs…</p>
+          <p className="text-sm text-army-400">{t("loading")}</p>
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<Briefcase className="h-8 w-8" />}
-            title="No jobs match your filters"
+            title={t("noResults")}
             message="Try clearing the search or switching the state filter."
           />
         ) : (
